@@ -1,0 +1,9 @@
+[
+    {
+        "questions": "Le matin on dis plutôt ?",
+        "reponse":["bonjour","bonsoir", "bon matin"],
+        "correction":"bonjour",
+        "commentaire":"Lorsque le soleil se lève et ce jusqu'à son couché, on peut saluer par un bonjour" 
+
+    }
+]
