@@ -5,5 +5,29 @@
         "correction":"bonjour",
         "commentaire":"Lorsque le soleil se lève et ce jusqu'à son couché, on peut saluer par un bonjour" 
 
-    }
+    },
+    {
+        "questions": "Le soir on dis plutôt ?",
+        "reponse":["bonjour","au revoir", "bonsoir"],
+        "correction":"bonsoir",
+        "commentaire":"Lorsque le soleil ce couche on peut évidemment saluer par un bonsoir!" 
+    },
+    {
+        "questions": "Le soir on dis plutôt ?",
+        "reponse":["bonjour","au revoir", "bonsoir"],
+        "correction":"bonsoir",
+        "commentaire":"Lorsque le soleil ce couche on peut évidemment saluer par un bonsoir!" 
+    },
+    {
+        "questions": "Le midi on dis plutôt ?",
+        "reponse":["bonjour","au revoir", "bon appétit"],
+        "correction":"bon appétit",
+        "commentaire":"Avant de manger il est fort poli de souhaiter à ses convives un bon appétit!" 
+    },
+    {
+         "questions": "La nuit on dis plutôt ?",
+         "reponse":["bonjour","au revoir", "bonne nuit"],
+         "correction":"bonne nuit",
+         "commentaire":"Avant de dormir il est fort poli de souhaiter une bonne nuit!"         
+    }    
 ]

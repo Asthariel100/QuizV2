@@ -26,9 +26,10 @@ function shuffleArray(array)
 // démarrage du quiz   
 async function renderQuiz()
 {
-    const quiz = await getQuestions();
+    const allquestions = await getQuestions();
+    shuffleArray(allquestions)
+    const quiz = allquestions.splice(2);
     let html = `<form class="form-check" id="quizform" >`;
-    shuffleArray(quiz);
 
 
 //Boucle sur les questions aprés le tri pour afficher les questions, index pour grouper les boutons radios
@@ -65,10 +66,13 @@ async function renderQuiz()
         correctionResults = correctingResults(userInputs, quizCorrections);
         UserScore = score(correctionResults);
         Score = displayScore(UserScore);
-        scoreTable = getLocalStorage(); 
+        scoreTable = getLocalStorage() || [];
+        display = checkHighScores(UserScore,scoreTable);
+
     const form = document.querySelector('#quizform').addEventListener('submit',function(e)
-    {       
-        renderUserForm(UserScore, scoreTable);
+    {    
+  
+        renderUserForm(UserScore, scoreTable, display);
     });
     });  
        
@@ -185,7 +189,8 @@ function score(correctionResults)
     return score;
 }
 
-function displayScore(userScore, scoreTable)
+//fonction d'affichage du score
+function displayScore(userScore)
 {
     const score = document.getElementById("button");
     score.textContent = "aller au tableau des scores";
@@ -194,15 +199,43 @@ function displayScore(userScore, scoreTable)
     score.appendChild(newscore);
 }
 
-
-function renderUserForm(UserScore)
+//Fonction de vérification du score courant par rapport au meilleur score
+function checkHighScores(UserScore, scoreTable)
 {
+    var highScores = [];
+
+    scoreTable.forEach((element, index) =>
+    {
+        highScores.push(scoreTable[index].UserScore);
+    });
+    console.log(highScores);
+    var compare = Math.min.apply(Math, highScores);
+
+    console.log(compare);
+
+    if(compare >= UserScore)
+    {
+        display= false;
+        return display;
+    }
+    else
+    {
+        display = true;
+
+        return display;
+    }
+}
+
+//Fonction d'affichage du tbaleau des scores
+function renderUserForm(UserScore, scoreTable, display)
+{
+    
 
     let html = `<form class="form-check" id="userscoreform">
                         <div class="mb-3 p-3">
-                            <label for="exampleFormControlInput1" class="form-label">Sauvegardez votre score</label>
-                            <input class="form-control" name="userName" placeholder="Nom d'utilisateur">
-                            <button class="btn btn-primary m-3" type="submit">Valider</button>
+                            <h1 for="exampleFormControlInput1" class="form-label"id="bravomoi">Nouveau High score ! Veuillez saisir votre nom :</h1>
+                            <input class="form-control" id="test" name="userName" placeholder="Nom d'utilisateur">
+                            <button class="btn btn-primary m-3" style="display: block;" type="submit" id="validation">Valider</button>
                         </div>
                     </form>
                     <table class="table table-success table-striped">
@@ -213,45 +246,49 @@ function renderUserForm(UserScore)
                             <th scope="col">Score</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                            <th scope="row">1</th>
-                            <td>Yohann</td>
-                            <td>25</td>
+                        <tbody>`;
+        scoreTable.forEach((element, index) => 
+                        {
+                            let scoreBoard =`<tr>
+                            <th scope="row">${1 + index}</th>
+                            <td>${scoreTable[index].userName}</td>
+                            <td>${scoreTable[index].UserScore}</td>
                             </tr>
-                            <tr>
-                            <th scope="row">2</th>
-                            <td>Robert</td>
-                            <td>20</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                            <td>Tony Stark</td>
-                            <td>20</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">4</th>
-                            <td>Caitlyn</td>
-                            <td>15</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">5</th>
-                            <td>Mohammed Ali</td>
-                            <td>10</td>
-                            </tr>
-                        </tbody>
+                            <tr>`
+                            html += scoreBoard
+                        },
+                        
+                        );
+         html += 
+                            `</tbody>
                     </table>
-                    <button type="button" class="btn btn-primary" id="newQuiz">Relancer le quiz!</button>`
+                    <form class="form-check" id="resetQuiz">
+                    <button class="btn btn-primary" id="newQuiz" type="submit">Relancer le quiz!</button>
+                    </form>`
                     ;
 
     let container = document.querySelector('.container');
     container.innerHTML = html;
+
+    hideInputs(display);
+
     const form = document.querySelector('#userscoreform').addEventListener('submit',function(e)
     {
+
         e.preventDefault();     
         setLocalStorage(UserScore);
-                   
+        scoreTable = getLocalStorage();
+        display = false;
+        hideInputs(display);
+        renderUserForm(UserScore, scoreTable, display);
+        
     });
+    const form2 = document.querySelector('#resetQuiz').addEventListener('submit',function(e)
+    {
+
+        renderQuiz();                    
+    });
+    
     
 }
 
@@ -275,8 +312,7 @@ function setLocalStorage(UserScore, highScores)
     var highScores = getLocalStorage() || [];
     const savedScore = {UserScore, userName};
     highScores.push(savedScore);
- 
-    highScores.sort((a,b)=>b.Score-a.Score);
+    highScores.sort((a,b)=>b.UserScore-a.UserScore);
 
     highScores.splice(5);
 
@@ -300,12 +336,41 @@ function getUserName()
     }
     catch(error)
     {
-        alert("veuillez saisir un nom d'utilisateur");        
+        alert("veuillez saisir un nom d'utilisateur"); 
+
+        return;       
     }
 
     return userName.value;    
 }
 
+//Fonction pour cacher le formulaire aprés inscription du nom
+function hideInputs(display)
+{
+    
+    if(display == true)
+    {
+        var userNameOk = document.getElementById(`validation`);
+        userNameOk.style.display = "block"; 
+        
+        var userInputOk = document.getElementById(`test`);
+        userInputOk.style.display = "block";  
+
+        var userInputOk = document.getElementById(`bravomoi`);
+        userInputOk.style.display = "block"; 
+    }
+    else
+    {
+        var userNameOk = document.getElementById(`validation`);
+        userNameOk.style.display = "none"; 
+    
+        var userInputOk = document.getElementById(`test`);
+        userInputOk.style.display = "none";
+
+        var userInputOk = document.getElementById(`bravomoi`);
+        userInputOk.style.display = "none";
+    }    
+}
 
 // Function pour vider le local storage
 function clearstorage()
