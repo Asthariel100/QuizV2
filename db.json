@@ -29,5 +29,11 @@
          "reponse":["bonjour","au revoir", "bonne nuit"],
          "correction":"bonne nuit",
          "commentaire":"Avant de dormir il est fort poli de souhaiter une bonne nuit!"         
+    },
+    {
+         "questions": "La nuit on dis plutôt ?",
+         "reponse":["bonjour","au revoir", "bonne nuit"],
+         "correction":"bonne nuit",
+         "commentaire":"Avant de dormir il est fort poli de souhaiter une bonne nuit!"         
     }    
 ]

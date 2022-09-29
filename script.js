@@ -28,7 +28,7 @@ async function renderQuiz()
 {
     const allquestions = await getQuestions();
     shuffleArray(allquestions)
-    const quiz = allquestions.splice(2);
+    const quiz = allquestions.splice(1);
     let html = `<form class="form-check" id="quizform" >`;
 
 
@@ -64,7 +64,7 @@ async function renderQuiz()
         userInputs = checkResult(quiz);
         quizCorrections = getRightAnswer(quiz)
         correctionResults = correctingResults(userInputs, quizCorrections);
-        UserScore = score(correctionResults);
+        const UserScore = score(correctionResults);
         Score = displayScore(UserScore);
         scoreTable = getLocalStorage() || [];
         display = checkHighScores(UserScore,scoreTable);
@@ -203,13 +203,13 @@ function displayScore(userScore)
 function checkHighScores(UserScore, scoreTable)
 {
     var highScores = [];
-
+    console.log(scoreTable);
     scoreTable.forEach((element, index) =>
     {
         highScores.push(scoreTable[index].UserScore);
     });
     console.log(highScores);
-    var compare = Math.min.apply(Math, highScores);
+    var compare = scoreTable.length ? Math.min.apply(Math, highScores) : 0;
 
     console.log(compare);
 
@@ -274,7 +274,7 @@ function renderUserForm(UserScore, scoreTable, display)
 
     const form = document.querySelector('#userscoreform').addEventListener('submit',function(e)
     {
-
+        
         e.preventDefault();     
         setLocalStorage(UserScore);
         scoreTable = getLocalStorage();
